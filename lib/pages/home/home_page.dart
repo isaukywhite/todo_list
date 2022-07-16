@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'modules/speech/speech.dart';
-import 'modules/todo_database/models/todo.dart';
-import 'modules/todo_database/todo_database.dart';
+import '../../modules/speech/speech.dart';
+import '../../modules/todo_database/models/todo.dart';
+import '../../modules/todo_database/todo_database.dart';
+import 'home_store.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,20 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  ValueNotifier<List<Todo>> todos = ValueNotifier<List<Todo>>([]);
-  ValueNotifier<bool> recording = ValueNotifier<bool>(false);
-
-  void load() {
-    TodoDatabaseImpl.i.getTodos().then((value) {
-      todos.value = value;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    load();
-  }
+  final HomeStore store = HomeStore();
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +22,13 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: ValueListenableBuilder<List<Todo>>(
-                valueListenable: todos,
+                valueListenable: store.todos,
                 builder: (context, value, _) {
+                  if (value.isEmpty) {
+                    return const Center(
+                      child: Text("You don't have any todos yet"),
+                    );
+                  }
                   return ListView.builder(
                       itemCount: value.length,
                       itemBuilder: (ctx, index) {
@@ -64,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                                 if (value == null) return;
                                 todo.completed = value;
                                 TodoDatabaseImpl.i.saveTodo(todo);
-                                load();
+                                store.loadTodos();
                               },
                             ),
                             onLongPress: () {
@@ -80,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                                         TodoDatabaseImpl.i
                                             .deleteTodo(todo)
                                             .then((value) {
-                                          load();
+                                          store.loadTodos();
                                         });
                                         Navigator.pop(context);
                                       },
@@ -103,7 +96,7 @@ class _HomePageState extends State<HomePage> {
       extendBody: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: ValueListenableBuilder<bool>(
-        valueListenable: recording,
+        valueListenable: store.recording,
         builder: (_, value, __) {
           return FloatingActionButton.large(
             child: Icon(
@@ -111,9 +104,9 @@ class _HomePageState extends State<HomePage> {
               color: value ? Colors.red : Colors.green[900],
             ),
             onPressed: () async {
-              recording.value = true;
+              store.recording.value = true;
               final resp = await SpeechCustom.getText();
-              recording.value = false;
+              store.recording.value = false;
               if (resp.isEmpty) {
                 showDialog(
                   context: context,
@@ -151,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               );
-              load();
+              store.loadTodos();
             },
           );
         },
