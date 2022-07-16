@@ -4,10 +4,8 @@ import '../../modules/todo_database/models/todo.dart';
 import '../../modules/todo_database/todo_database.dart';
 
 class HomeStore {
-  HomeStore._();
   static final HomeStore instance = HomeStore._();
-
-  HomeStore() {
+  HomeStore._() {
     loadTodos();
   }
   ValueNotifier<List<Todo>> todos = ValueNotifier<List<Todo>>([]);
