@@ -54,7 +54,7 @@ class _CardTodoState extends State<CardTodo> {
             content: "Are you sure you want to delete this todo?",
             actions: [
               TextButton(
-                child: const Text('Sim'),
+                child: const Text('Yes'),
                 onPressed: () {
                   TodoDatabaseImpl.i.deleteTodo(widget.todo).then((value) {
                     homeStore.loadTodos();
@@ -63,7 +63,7 @@ class _CardTodoState extends State<CardTodo> {
                 },
               ),
               TextButton(
-                child: const Text('Não'),
+                child: const Text('No'),
                 onPressed: () => Navigator.pop(context),
               ),
             ],

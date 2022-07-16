@@ -60,8 +60,8 @@ class _HomePageState extends State<HomePage> {
                   store.recording.value = false;
                   if (resp.isEmpty) {
                     const DialogAlert(
-                      title: 'Erro',
-                      content: 'Nenhuma palavra foi reconhecida',
+                      title: 'Error',
+                      content: 'No text was recognized',
                     ).show(context);
                     return;
                   }
@@ -70,8 +70,8 @@ class _HomePageState extends State<HomePage> {
                       .then(
                     (_) {
                       const DialogAlert(
-                        title: 'Sucesso',
-                        content: 'Todo adicionado com sucesso',
+                        title: 'Success',
+                        content: 'Todo was added',
                       ).show(context);
                     },
                   );
