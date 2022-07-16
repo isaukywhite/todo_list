@@ -3,14 +3,18 @@ import 'dart:developer';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechCustom {
-  SpeechCustom();
+  SpeechCustom._();
 
-  Future<String> getText() async {
+  static Future<String> getText() async {
+    int seconds = 15;
     String text = '';
     stt.SpeechToText speech = stt.SpeechToText();
     bool available = await speech.initialize(
       onStatus: (status) {
         log('onStatus: $status');
+        if (status == 'notListening') {
+          seconds = 0;
+        }
       },
       onError: (error) {
         log('onError: $error');
@@ -26,11 +30,8 @@ class SpeechCustom {
     } else {
       log("Access denied for speech recognition.");
     }
-    int seconds = 15;
+
     while (seconds > 0) {
-      if (text != '') {
-        break;
-      }
       await Future.delayed(const Duration(seconds: 1));
       seconds--;
     }
