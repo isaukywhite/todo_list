@@ -12,12 +12,13 @@ class SpeechCustom {
     bool available = await speech.initialize(
       onStatus: (status) {
         log('onStatus: $status');
-        if (status == 'notListening') {
+        if (['notListening', 'done'].contains(status)) {
           seconds = 0;
         }
       },
       onError: (error) {
         log('onError: $error');
+        seconds = 0;
       },
     );
     if (available) {
@@ -29,6 +30,7 @@ class SpeechCustom {
       );
     } else {
       log("Access denied for speech recognition.");
+      seconds = 0;
     }
 
     while (seconds > 0) {
