@@ -8,8 +8,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _value = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,17 +26,18 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         children: [
                           CheckboxListTile(
-                            title: const Text('VOICE'),
+                            title: Text(
+                              'VOICE',
+                              style: TextStyle(
+                                fontSize: 19,
+                                color: Colors.green[900],
+                              ),
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50),
                             ),
-                            autofocus: false,
-                            value: _value,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                _value = value ?? false;
-                              });
-                            },
+                            value: false,
+                            onChanged: (bool? value) {},
                             checkColor: Colors.green[900],
                             activeColor: Colors.greenAccent,
                           ),
